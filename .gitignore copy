@@ -1,0 +1,32 @@
+# Node modules
+node_modules/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS files
+desktop.ini
+.DS_Store
+Thumbs.db
+
+# Spreadsheet backups and temp files
+~$*.xlsx
+*.tmp
+
+# SQL backups
+*.sql
+
+# Logs
+*.log
+
+# Misc
+.gemini/
+.idea/
+.vscode/

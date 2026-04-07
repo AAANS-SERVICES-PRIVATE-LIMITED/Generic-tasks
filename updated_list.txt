@@ -1,0 +1,123 @@
+01 - Professional Services
+Accounting Firms: AI-powered accounting + automated bank reconciliation + GST/TDS compliance
+CA Firms: GST/TDS filing + automated accounting + audit trails
+Tax Consultants: Global tax compliance + TDS/GST calculations + financial reporting
+Company Secretaries: Invoicing + compliance reporting + multi-company management
+Financial Advisors: AI financial insights + profit & loss + cash flow statements
+Business Consultants: Automated invoicing + expense management + reporting
+Law Firms: Invoicing + expense tracking + audit-ready records
+HR Consultants: Invoicing + payroll-related expense management + reporting
+Recruitment Consultants: Invoicing + client billing + financial reconciliation
+
+02 - Retail and Commerce
+Auto Accessories: Omnichannel POS + inventory management + GST invoicing
+Beauty & Cosmetics: POS + batch/expiry inventory + real-time stock alerts
+E-commerce Sellers: POS + inventory sync + automated GST invoicing
+Electronics & Gadgets: POS + batch tracking + barcode inventory
+Fashion & Apparel: Omnichannel POS + inventory control + sales reporting
+Furniture Stores: Inventory management + GST invoicing + procurement
+Gift Shops: POS + inventory + daily sales reporting
+Grocery & Supermarkets: POS + batch/expiry tracking + stock alerts
+Hardware Stores: Inventory + barcode + GST compliance
+Jewelry Stores: POS + inventory management + invoicing
+Pet Stores: Inventory + GST invoicing + sales tracking
+Pharmacies: Batch & expiry tracking + POS + GST compliance
+Sports & Fitness Stores: POS + inventory + real-time ledger sync
+Stationery Stores: Simple POS + inventory + invoicing
+Toy & Baby Stores: Inventory management + GST invoicing + stock alerts
+
+03 - Hospitality and Food Services
+Bakeries & Sweet Shops: POS + batch/expiry inventory + daily sales reporting
+Banquet Halls: Invoicing + event billing + GST compliance
+Catering Services: Invoicing + inventory + expense management
+Cloud Kitchens: POS + inventory (expiry) + GST reporting
+Corporate Cafeterias: POS + inventory management + sales sync
+Food Trucks: Mobile POS + inventory + GST invoicing
+Hotels & Resorts: POS + inventory + financial reporting
+Ice Cream Parlors: POS + batch/expiry tracking + stock alerts
+Juice Bars: POS + inventory + daily reconciliation
+Nightclubs: POS + sales reporting + GST compliance
+Pubs & Bars: POS + inventory management + invoicing
+Restaurants & Cafes: Cloud POS + inventory + real-time ledger
+Tea Shops: POS + simple inventory + GST invoicing
+
+04 - Healthcare and Wellness
+Ayurvedic Centers: Billing + inventory + GST compliance
+Clinics & Diagnostics: Invoicing + patient billing + accounting
+Dental Clinics: Billing + expense management + reporting
+Dispensaries: Batch/expiry inventory + POS + GST
+Medical Labs: Invoicing + inventory tracking + financial reports
+Optical Stores: Inventory + POS + GST invoicing
+Physiotherapy Centers: Billing + accounting + reconciliation
+Senior Care: Invoicing + expense tracking + reporting
+Vet Clinics: Inventory (batch) + billing + GST compliance
+
+05 - Manufacturing and Distribution
+Auto Parts & Hardware: Manufacturing BOM + inventory + procurement
+Chemical Manufacturing: Batch tracking + inventory + GST
+Distributors: Inventory management + procurement + GST invoicing
+Electronics Assembly: BOM + inventory + assembly tracking
+Export Houses: Multi-currency + GST compliance + invoicing
+FMCG Manufacturers: Manufacturing recipes + batch/expiry + inventory
+Food & Beverage Manufacturers: Expiry tracking + BOM + procurement
+Furniture Manufacturing: Manufacturing + inventory + costing
+Paper & Printing: Inventory + invoicing + GST
+Plastic & Packaging: Batch inventory + manufacturing + GST
+Steel Fabrication: Project inventory + procurement + accounting
+Textile & Garment: Manufacturing + inventory + GST compliance
+Warehousing: Inventory control + stock alerts + reconciliation
+
+06 - Service-Based Businesses
+Cab Operators: Invoicing + expense tracking + GST compliance
+Facility Management: Invoicing + multi-project accounting + reporting
+Insurance Agents: Commission invoicing + accounting + reconciliation
+Laundry & Dry Cleaning: Invoicing + inventory + GST
+Logistics & Transport: Invoicing + expense management + reporting
+Packers & Movers: Job-based invoicing + accounting + GST
+Real Estate Property: Invoicing + rental accounting + compliance
+Repair & Maintenance: Service invoicing + inventory + expense tracking
+Security Services: Invoicing + payroll-related accounting + reporting
+
+07 - Construction and Real Estate
+Builders & Developers: Project accounting + GST/TDS + invoicing
+Civil Contractors: Project costing + expense management + GST
+Facility Management (Construction): Invoicing + accounting + reporting
+Flooring Specialists: Job invoicing + inventory + compliance
+HVAC Contractors: Service invoicing + procurement + accounting
+Interior Designers: Project invoicing + expense tracking + reporting
+Landscaping Services: Job-based invoicing + accounting + GST
+Painting Contractors: Invoicing + material inventory + reconciliation
+Plumbing Contractors: Service billing + inventory + GST
+Property Brokers: Commission invoicing + accounting + reporting
+RERA Consultants: Compliance reporting + invoicing + accounting
+Surveyors: Invoicing + expense management + financial reports
+Waterproofing Services: Job invoicing + accounting + GST compliance
+
+08 - Technology and IT Services
+App Development: Client invoicing + multi-currency + accounting
+Cloud Services: Subscription invoicing + automated accounting + reporting
+Cybersecurity Firms: Invoicing + expense tracking + GST
+Data Analytics: Invoicing + financial reporting + insights
+E-commerce Solutions: Invoicing + accounting + GST compliance
+IT Infrastructure: Project invoicing + procurement + reconciliation
+IT Services: Service invoicing + multi-company + reporting
+SaaS Startups: Subscription billing + automated accounting + insights
+Tech Support: Ticketing-based invoicing + expense management
+Web Agencies: Project invoicing + accounting + GST
+
+09 - Education
+Colleges: Fee invoicing + accounting + GST compliance
+Schools: Fee collection + financial reporting + reconciliation
+Skill Centers: Course invoicing + accounting + reporting
+Vocational Training: Invoicing + expense tracking + GST
+
+10 - Automotive and Transport
+Bike Rentals: Asset tracking + invoicing + accounting
+Bike Showrooms: Inventory + POS + GST invoicing
+Car Dealerships: Vehicle inventory + POS + sales reporting
+Car Washing: Service invoicing + expense management + GST
+Driving Schools: Course invoicing + accounting + reporting
+EV Charging: Usage-based invoicing + reporting + compliance
+Fleet Management: Vehicle-wise expense + accounting + tracking
+Service Centers: Job card invoicing + inventory + GST
+Used Car Dealers: Inventory + invoicing + financial reconciliation
