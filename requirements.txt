@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+pydantic
+aiosmtplib
+python-dotenv
+jinja2
+certifi
+sqlalchemy
+psycopg2-binary
+pandas
+openpyxl
