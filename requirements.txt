@@ -1,0 +1,38 @@
+# Bank Data Extraction - Requirements
+# ====================================
+
+# PDF Processing
+pdf2image>=1.16.0
+
+# OCR
+pytesseract>=0.3.10
+Pillow>=9.0.0
+
+# Markdown Processing
+# (Standard library: html.parser, re, json, os, sys, shutil, importlib)
+
+# MinerU - Install separately (see below)
+# =======================================
+# DO NOT include mineru in this file - install using:
+#   pip install --upgrade pip
+#   pip install uv
+#   uv pip install -U "mineru[all]"
+# =======================================
+
+# System Dependencies (must be installed separately)
+# ==================================================
+# 1. Tesseract OCR (required for pytesseract)
+#    Windows: Download from https://github.com/UB-Mannheim/tesseract/wiki
+#    Linux: sudo apt install tesseract-ocr
+#    Mac: brew install tesseract
+#    
+#    IMPORTANT: Set Tesseract path in code:
+#    pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+#
+# 2. Poppler (required for pdf2image)
+#    Windows: Download from https://github.com/oschwartz10612/poppler-windows/releases
+#    Linux: sudo apt install poppler-utils
+#    Mac: brew install poppler
+#
+# 3. Add to System PATH or set in code:
+#    poppler_path = r'C:\path\to\poppler\bin'
