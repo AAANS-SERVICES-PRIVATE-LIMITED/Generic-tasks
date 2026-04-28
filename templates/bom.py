@@ -1,130 +1,117 @@
 import re
-from html.parser import HTMLParser
+import logging
+from .base import clean, extract_tables, table_to_markdown
+
+logger = logging.getLogger(__name__)
 
 
-def clean(text):
-    return text.strip()
+def extract(bank_name: str, md_text: str, ocr_text: str = None) -> dict:
+    """Extract metadata and transactions from a BOM (Bank of Maharashtra) statement."""
+    data: dict = {"bank": bank_name}
 
+    if not md_text:
+        logger.warning("[BOM] md_text is empty; skipping extraction.")
+        return {"metadata": data, "tables": []}
 
-class TableParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.tables = []
-        self.current_table = []
-        self.current_row = []
-        self.current_cell = []
-        self.in_table = False
-        self.in_row = False
-        self.in_cell = False
+    try:
+        tables = extract_tables(md_text)
 
-    def handle_starttag(self, tag, attrs):
-        if tag == 'table':
-            self.in_table = True
-            self.current_table = []
-        elif tag == 'tr':
-            self.in_row = True
-            self.current_row = []
-        elif tag in ('td', 'th'):
-            self.in_cell = True
-            self.current_cell = []
+        if tables:
+            customer_table = tables[0]
+            addr_lines = []  # Accumulate multi-row address
 
-    def handle_endtag(self, tag):
-        if tag == 'table':
-            self.in_table = False
-            if self.current_table:
-                self.tables.append(self.current_table)
-        elif tag == 'tr':
-            self.in_row = False
-            if self.current_row:
-                self.current_table.append(self.current_row)
-        elif tag in ('td', 'th'):
-            self.in_cell = False
-            cell_text = ''.join(self.current_cell).strip()
-            self.current_row.append(cell_text)
+            for row in customer_table:
+                if len(row) < 2:
+                    continue
+                try:
+                    left  = row[0]
+                    right = row[1]
+                    left_low  = left.lower()
+                    right_low = right.lower()
 
-    def handle_data(self, data):
-        if self.in_cell:
-            self.current_cell.append(data)
+                    # --- Left cell: customer fields ---
+                    if "name:" in left_low:
+                        data["name"] = left.split(":", 1)[-1].strip()
 
+                    elif "address:" in left_low:
+                        # First address line
+                        part = left.split(":", 1)[-1].strip()
+                        if part:
+                            addr_lines.append(part)
 
-def extract_tables(md_text):
-    """Extract HTML tables from markdown text."""
-    table_pattern = r'<table>.*?</table>'
-    table_matches = re.findall(table_pattern, md_text, re.DOTALL | re.IGNORECASE)
+                    elif addr_lines and not any(kw in left_low for kw in [
+                        "mobile", "email", "kyc", "ckyc", "primary", "date of birth",
+                        "cif", "statement", "account", "branch",
+                    ]):
+                        # Continuation address lines (no recognized keyword)
+                        val = left.strip()
+                        if val:
+                            addr_lines.append(val)
 
-    all_tables = []
-    for table_html in table_matches:
-        parser = TableParser()
-        parser.feed(table_html)
-        if parser.tables:
-            all_tables.extend(parser.tables)
+                    elif "mobile:" in left_low:
+                        if addr_lines:
+                            data["address"] = " ".join(addr_lines)
+                            addr_lines = []
+                        digits = re.sub(r"\D", "", left.split(":", 1)[-1])
+                        if digits:
+                            data["mobile"] = digits
 
-    return all_tables
+                    elif "email" in left_low:
+                        data["email"] = left.split(":", 1)[-1].strip()
 
+                    elif "date of birth" in left_low:
+                        data["dob"] = left.split(":", 1)[-1].strip()
 
-def table_to_markdown(table):
-    """Convert table data to markdown table format."""
-    if not table or len(table) == 0:
-        return ""
+                    elif "cif number" in left_low:
+                        data["cif"] = left.split(":", 1)[-1].strip()
 
-    md_lines = []
-    header = table[0]
-    md_lines.append("| " + " | ".join(str(cell) for cell in header) + " |")
-    md_lines.append("|" + "|".join(" --- " for _ in header) + "|")
-    for row in table[1:]:
-        md_lines.append("| " + " | ".join(str(cell) for cell in row) + " |")
+                    elif "statement date" in left_low:
+                        data["statement_date"] = left.split(":", 1)[-1].strip()
 
-    return "\n".join(md_lines)
+                    # --- Right cell: branch & account fields ---
+                    if "ifsc" in right_low:
+                        # May be "Branch No:00454 Branch IFSC:MAHB0000454"
+                        ifsc_m = re.search(r"ifsc[:\s]+([A-Z0-9]+)", right, re.IGNORECASE)
+                        if ifsc_m:
+                            data["ifsc"] = ifsc_m.group(1)
+                        branch_no_m = re.search(r"branch\s*no[:\s]+(\d+)", right, re.IGNORECASE)
+                        if branch_no_m:
+                            data["branch_no"] = branch_no_m.group(1)
 
+                    elif "branch name" in right_low:
+                        data["branch"] = right.split(":", 1)[-1].strip()
 
-def extract(bank_name, md_text, ocr_text=None):
-    data = {}
-    data["bank"] = bank_name
+                    elif "account no" in right_low:
+                        match = re.search(r"account\s*no[:\s]+(\d+)", right, re.IGNORECASE)
+                        if match:
+                            data["account_number"] = match.group(1)
 
-    # BOM stores everything in tables, parse the first (customer details) table
-    tables = extract_tables(md_text)
+                    elif "accountopen date" in right_low or "account open date" in right_low:
+                        data["account_open_date"] = right.split(":", 1)[-1].strip()
 
-    if tables and len(tables) > 0:
-        # First table has customer and account details
-        customer_table = tables[0]
+                    elif "account type" in right_low:
+                        data["account_type"] = right.split(":", 1)[-1].strip()
 
-        for row in customer_table:
-            if len(row) >= 2:
-                left_cell = row[0].lower()
-                right_cell = row[1].lower()
+                    elif "total balance" in right_low:
+                        data["total_balance"] = right.split(":", 1)[-1].strip()
 
-                # Left column - customer details
-                if "name:" in left_cell:
-                    data["name"] = row[0].split(":")[-1].strip()
-                elif "address:" in left_cell:
-                    data["address"] = row[0].split(":")[-1].strip()
-                elif "mobile:" in left_cell:
-                    data["mobile"] = row[0].split(":")[-1].strip()
-                elif "email" in left_cell:
-                    data["email"] = row[0].split(":")[-1].strip()
-                elif "date of birth" in left_cell:
-                    data["dob"] = row[0].split(":")[-1].strip()
-                elif "cif number" in left_cell:
-                    data["cif"] = row[0].split(":")[-1].strip()
+                    elif "available balance" in right_low:
+                        data["available_balance"] = right.split(":", 1)[-1].strip()
 
-                # Right column - branch/account details
-                if "ifsc" in right_cell:
-                    data["ifsc"] = row[1].split(":")[-1].strip()
-                elif "branch name" in right_cell:
-                    data["branch"] = row[1].split(":")[-1].strip()
-                elif "account no" in right_cell:
-                    data["account_number"] = row[1].split(":")[-1].strip()
-                elif "account type" in right_cell:
-                    data["account_type"] = row[1].split(":")[-1].strip()
-                elif "total balance" in right_cell:
-                    data["total_balance"] = row[1].split(":")[-1].strip()
+                    elif "nomination flag" in right_low:
+                        data["nomination"] = right.split(":", 1)[-1].strip()
 
-    # Print transaction tables (skip first customer table)
-    for i, table in enumerate(tables[1:] if len(tables) > 1 else [], 1):
-        print(f"\n### Table {i}")
-        print(table_to_markdown(table))
+                except Exception as cell_exc:
+                    logger.debug("[BOM] Error parsing cell: %s", cell_exc)
 
-    return {
-        "metadata": data,
-        "tables": tables
-    }
+            # Flush any remaining address lines
+            if addr_lines and not data.get("address"):
+                data["address"] = " ".join(addr_lines)
+
+        transaction_tables = tables[1:] if len(tables) > 1 else []
+
+    except Exception as exc:
+        logger.error("[BOM] Extraction failed: %s", exc, exc_info=True)
+        return {"metadata": data, "tables": []}
+
+    return {"metadata": data, "tables": transaction_tables}

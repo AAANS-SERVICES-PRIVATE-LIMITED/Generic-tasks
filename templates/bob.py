@@ -1,179 +1,122 @@
 import re
-from html.parser import HTMLParser
+import logging
+from .base import clean, extract_tables, table_to_markdown
+
+logger = logging.getLogger(__name__)
 
 
-def clean(text):
-    return text.strip()
+def extract(bank_name: str, md_text: str, ocr_text: str = None) -> dict:
+    """Extract metadata and transactions from a BOB (Bank of Baroda) bank statement."""
+    data: dict = {"bank": bank_name}
 
+    if not md_text:
+        logger.warning("[BOB] md_text is empty; will try OCR-only extraction.")
 
-class TableParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.tables = []
-        self.current_table = []
-        self.current_row = []
-        self.current_cell = []
-        self.in_table = False
-        self.in_row = False
-        self.in_cell = False
+    try:
+        lines = [clean(l) for l in (md_text or "").split("\n") if l.strip()]
 
-    def handle_starttag(self, tag, attrs):
-        if tag == 'table':
-            self.in_table = True
-            self.current_table = []
-        elif tag == 'tr':
-            self.in_row = True
-            self.current_row = []
-        elif tag in ('td', 'th'):
-            self.in_cell = True
-            self.current_cell = []
-
-    def handle_endtag(self, tag):
-        if tag == 'table':
-            self.in_table = False
-            if self.current_table:
-                self.tables.append(self.current_table)
-        elif tag == 'tr':
-            self.in_row = False
-            if self.current_row:
-                self.current_table.append(self.current_row)
-        elif tag in ('td', 'th'):
-            self.in_cell = False
-            cell_text = ''.join(self.current_cell).strip()
-            self.current_row.append(cell_text)
-
-    def handle_data(self, data):
-        if self.in_cell:
-            self.current_cell.append(data)
-
-
-def extract_tables(md_text):
-    """Extract HTML tables from markdown text."""
-    table_pattern = r'<table>.*?</table>'
-    table_matches = re.findall(table_pattern, md_text, re.DOTALL | re.IGNORECASE)
-
-    all_tables = []
-    for table_html in table_matches:
-        parser = TableParser()
-        parser.feed(table_html)
-        if parser.tables:
-            all_tables.extend(parser.tables)
-
-    return all_tables
-
-
-def table_to_markdown(table):
-    """Convert table data to markdown table format."""
-    if not table or len(table) == 0:
-        return ""
-
-    md_lines = []
-    header = table[0]
-    md_lines.append("| " + " | ".join(str(cell) for cell in header) + " |")
-    md_lines.append("|" + "|".join(" --- " for _ in header) + "|")
-    for row in table[1:]:
-        md_lines.append("| " + " | ".join(str(cell) for cell in row) + " |")
-
-    return "\n".join(md_lines)
-
-
-def extract(bank_name, md_text, ocr_text=None):
-    lines = [clean(l) for l in md_text.split("\n") if l.strip()]
-
-    data = {}
-    data["bank"] = bank_name
-
-    # BOB specific extraction
-    # First line contains name: "DHARMENDRA KUMAR Customer ID: XXXXX4288..."
-    if lines:
-        first_line = lines[0]
-        # Name is before "Customer ID" - case insensitive, flexible spacing
-        match = re.search(r'^(.+?)\s+customer\s+id\s*[:\-]?\s*', first_line, re.IGNORECASE)
-        if match:
-            data["name"] = match.group(1).strip()
-
-    for i, line in enumerate(lines):
-        low = line.lower()
-
-        # Customer ID - capture until space or non-alphanumeric
-        if "customer id" in low:
-            match = re.search(r'customer\s*id[:\s]+([A-Za-z0-9X]+)', line, re.IGNORECASE)
+        # Name is before "Customer ID" on the first line
+        if lines:
+            match = re.search(r"^(.+?)\s+customer\s+id\s*[:\-]?\s*", lines[0], re.IGNORECASE)
             if match:
-                data["customer_id"] = match.group(1)
+                data["name"] = match.group(1).strip()
 
-        # Account Number
-        elif "account no" in low:
-            match = re.search(r'account\s*no[-:\s]+(\d+)', line, re.IGNORECASE)
-            if match:
-                data["account_number"] = match.group(1)
-
-        # PAN (if available)
-        elif re.search(r'\b[A-Z]{5}[0-9]{4}[A-Z]\b', line):
-            match = re.search(r'\b[A-Z]{5}[0-9]{4}[A-Z]\b', line)
-            if match:
-                data["pan"] = match.group(0)
-
-        # Statement period
-        elif "detailed statement" in low and "between" in low:
-            match = re.search(r'between\s+(\d{2}-\d{2}-\d{4})\s+to\s+(\d{2}-\d{2}-\d{4})', line, re.IGNORECASE)
-            if match:
-                data["statement_from"] = match.group(1)
-                data["statement_to"] = match.group(2)
-
-    # === EXTRACT FROM OCR TEXT (for grey box data that MinerU misses) ===
-    if ocr_text:
-        ocr_lines = [clean(l) for l in ocr_text.split("\n") if l.strip()]
-        print(f"\nDEBUG: Extracting from OCR text ({len(ocr_lines)} lines)")
-        print("  First 10 OCR lines:")
-        for i, l in enumerate(ocr_lines[:10]):
-            print(f"    {i}: {l}")
-
-        for line in ocr_lines:
+        for line in lines:
             low = line.lower()
 
-            # Branch from OCR - pattern: Branch-DAHIYAWAN or Branch-DAHIVAWAN
-            if "branch-" in low or "branch:" in low:
-                match = re.search(r'branch[-:\s]+([A-Za-z]+)', line, re.IGNORECASE)
-                if match and not data.get("branch"):
-                    data["branch"] = match.group(1)
-                    print(f"  Found branch in OCR: {data['branch']}")
+            try:
+                if "customer id" in low:
+                    match = re.search(r"customer\s*id[:\s]+([A-Za-z0-9X]+)", line, re.IGNORECASE)
+                    if match:
+                        data["customer_id"] = match.group(1)
 
-            # IFSC Code from OCR - pattern: BARBODAHIVAWAN or BARB + branch
-            # BOB IFSC starts with BARB followed by branch name (without vowels sometimes)
-            if "barb" in low or "ifsc" in low or "baroda" in low:
-                # Look for BARB followed by letters/numbers (full IFSC)
-                match = re.search(r'barb[a-z0-9]+', line, re.IGNORECASE)
-                if match and not data.get("ifsc"):
-                    data["ifsc"] = match.group(0).upper()
-                    print(f"  Found IFSC in OCR: {data['ifsc']}")
-                # Also try pattern: IFSC Code: BARB...
-                match = re.search(r'ifsc\s*code[:\-\s]+([a-z0-9]+)', line, re.IGNORECASE)
-                if match and not data.get("ifsc"):
-                    data["ifsc"] = match.group(1).upper()
-                    print(f"  Found IFSC in OCR: {data['ifsc']}")
+                elif "registered address" in low and not data.get("address"):
+                    # e.g. "...Registered Address: Jai Ambe Chawl...PIN: 400606"
+                    match = re.search(r"registered\s*address[:\s]+(.+?)(?:\s+pin[:\s]|$)", line, re.IGNORECASE)
+                    if match:
+                        data["address"] = match.group(1).strip()
+                    pin_match = re.search(r"pin[:\s]+(\d{6})", line, re.IGNORECASE)
+                    if pin_match:
+                        data["pin"] = pin_match.group(1)
 
-            # MICR Code from OCR - pattern: MICR Code-211015214 or just 211015214
-            if "micr" in low:
-                match = re.search(r'micr\s*code[-:\s]*(\d+)', line, re.IGNORECASE)
-                if match and not data.get("micr"):
-                    data["micr"] = match.group(1)
-                    print(f"  Found MICR in OCR: {data['micr']}")
-                else:
-                    # Try standalone 9 digit number near MICR
-                    match = re.search(r'micr.*?(\d{9})', line, re.IGNORECASE)
-                    if match and not data.get("micr"):
-                        data["micr"] = match.group(1)
-                        print(f"  Found MICR in OCR: {data['micr']}")
+                elif "account no" in low:
+                    match = re.search(r"account\s*no[-:\s]+(\d+)", line, re.IGNORECASE)
+                    if match:
+                        data["account_number"] = match.group(1)
 
-    # Extract tables
-    tables = extract_tables(md_text)
+                elif ("branch" in low or "ifsc" in low or "barb" in low) and not data.get("branch"):
+                    # e.g. "Branch-DAHIYAWAN Ifsc Code-BARBODAHIYA MICR Code-211015214"
+                    branch_match = re.search(r"branch[-:\s]+([A-Za-z]+)", line, re.IGNORECASE)
+                    if branch_match:
+                        data["branch"] = branch_match.group(1).strip()
+                    if not data.get("ifsc"):
+                        ifsc_match = re.search(r"ifsc\s*code[-:\s]+([A-Z0-9]+)", line, re.IGNORECASE)
+                        if ifsc_match:
+                            data["ifsc"] = ifsc_match.group(1).upper()
+                        else:
+                            barb_match = re.search(r"\bBARB[A-Z0-9]{6,}\b", line, re.IGNORECASE)
+                            if barb_match:
+                                data["ifsc"] = barb_match.group(0).upper()
+                    if not data.get("micr"):
+                        micr_match = re.search(r"micr\s*code[-:\s]*(\d+)", line, re.IGNORECASE)
+                        if micr_match:
+                            data["micr"] = micr_match.group(1)
 
-    # Print tables in markdown format
-    for i, table in enumerate(tables, 1):
-        print(f"\n### Table {i}")
-        print(table_to_markdown(table))
+                elif "detailed statement" in low and "between" in low:
+                    match = re.search(
+                        r"between\s+(\d{2}-\d{2}-\d{4})\s+to\s+(\d{2}-\d{2}-\d{4})",
+                        line, re.IGNORECASE,
+                    )
+                    if match:
+                        data["statement_from"] = match.group(1)
+                        data["statement_to"] = match.group(2)
 
-    return {
-        "metadata": data,
-        "tables": tables
-    }
+            except Exception as field_exc:
+                logger.debug("[BOB] Error parsing line '%s': %s", line, field_exc)
+
+        # --- OCR fallback for grey-box data that MinerU misses ---
+        if ocr_text:
+            ocr_lines = [clean(l) for l in ocr_text.split("\n") if l.strip()]
+            logger.debug("[BOB] Scanning %d OCR lines for grey-box fields.", len(ocr_lines))
+
+            for line in ocr_lines:
+                low = line.lower()
+
+                try:
+                    if ("branch-" in low or "branch:" in low) and not data.get("branch"):
+                        match = re.search(r"branch[-:\s]+([A-Za-z]+)", line, re.IGNORECASE)
+                        if match:
+                            data["branch"] = match.group(1)
+                            logger.debug("[BOB] branch from OCR: %s", data["branch"])
+
+                    if ("barb" in low or "ifsc" in low or "baroda" in low) and not data.get("ifsc"):
+                        match = re.search(r"barb[a-z0-9]+", line, re.IGNORECASE)
+                        if match:
+                            data["ifsc"] = match.group(0).upper()
+                            logger.debug("[BOB] ifsc from OCR: %s", data["ifsc"])
+                        match2 = re.search(r"ifsc\s*code[:\-\s]+([a-z0-9]+)", line, re.IGNORECASE)
+                        if match2 and not data.get("ifsc"):
+                            data["ifsc"] = match2.group(1).upper()
+                            logger.debug("[BOB] ifsc (label) from OCR: %s", data["ifsc"])
+
+                    if "micr" in low and not data.get("micr"):
+                        match = re.search(r"micr\s*code[-:\s]*(\d+)", line, re.IGNORECASE)
+                        if match:
+                            data["micr"] = match.group(1)
+                        else:
+                            match = re.search(r"micr.*?(\d{9})", line, re.IGNORECASE)
+                            if match:
+                                data["micr"] = match.group(1)
+                        if data.get("micr"):
+                            logger.debug("[BOB] micr from OCR: %s", data["micr"])
+
+                except Exception as field_exc:
+                    logger.debug("[BOB] Error parsing OCR line '%s': %s", line, field_exc)
+
+        tables = extract_tables(md_text or "")
+
+    except Exception as exc:
+        logger.error("[BOB] Extraction failed: %s", exc, exc_info=True)
+        return {"metadata": data, "tables": []}
+
+    return {"metadata": data, "tables": tables}
