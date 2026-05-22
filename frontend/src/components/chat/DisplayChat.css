@@ -1,0 +1,196 @@
+/* ============================
+   DISPLAY CHAT — ChatGPT Clone
+   ============================ */
+
+.display-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  background-color: var(--bg-primary);
+}
+
+/* ---- WELCOME (centered) ---- */
+.display-chat.centered {
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding-bottom: 60px;
+}
+
+.welcome-heading {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+  letter-spacing: -0.02em;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ---- INPUT DOCK ---- */
+.input-dock {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 24px 20px 24px;
+  flex-shrink: 0;
+}
+
+/* Centered (welcome state) */
+.input-dock-center {
+  padding-bottom: 80px;
+}
+
+/* Bottom (chat state) */
+.input-dock-bottom {
+  padding-top: 8px;
+}
+
+/* ---- SCROLL AREA ---- */
+.chat-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 24px 0 16px 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+
+.chat-scroll-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+}
+
+/* ---- MESSAGES CONTAINER ---- */
+.messages-container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---- MESSAGE ROW ---- */
+.message-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+}
+
+.message-row.user {
+  flex-direction: row-reverse;
+}
+
+.message-row.assistant {
+  flex-direction: row;
+}
+
+/* Assistant icon placeholder */
+.assistant-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.assistant-logo-placeholder {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #404040;
+  border: 1.5px solid #555;
+}
+
+/* ---- BUBBLES ---- */
+.message-bubble {
+  max-width: 75%;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  word-wrap: break-word;
+  font-family: 'Inter', sans-serif;
+}
+
+.message-bubble.user {
+  background: #2f2f2f;
+  padding: 12px 18px;
+  border-radius: 18px 18px 4px 18px;
+  color: var(--text-primary);
+}
+
+.message-bubble.assistant {
+  background: transparent;
+  padding: 4px 0;
+  border-radius: 0;
+  color: var(--text-primary);
+  max-width: 100%;
+  flex: 1;
+}
+
+/* ---- LOADING ---- */
+.display-chat.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-color: var(--bg-primary);
+}
+
+.loading-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes pulse {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); }
+  40% { opacity: 1; transform: scale(1); }
+}
+
+/* ---- MESSAGE MEDIA ATTACHMENTS ---- */
+.message-media-attachment {
+  margin-bottom: 8px;
+  max-width: 250px;
+  max-height: 250px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.bubble-attached-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.25s ease;
+}
+
+.bubble-attached-image:hover {
+  transform: scale(1.02);
+  cursor: zoom-in;
+}

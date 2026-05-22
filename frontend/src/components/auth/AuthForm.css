@@ -1,0 +1,97 @@
+/* ============================
+   AUTH FORM — ChatGPT Clone
+   ============================ */
+
+.auth-form-container {
+  padding: 8px 0;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.auth-form-container h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #3f3f3f;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-family: 'Inter', sans-serif;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: rgba(255,255,255,0.3);
+  background-color: #404040;
+}
+
+.form-group input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.auth-form-container button[type="submit"] {
+  width: 100%;
+  padding: 10px 16px;
+  background-color: #ffffff;
+  color: #000000;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  margin-top: 6px;
+  font-family: 'Inter', sans-serif;
+}
+
+.auth-form-container button[type="submit"]:hover:not(:disabled) {
+  background-color: #ececec;
+}
+
+.auth-form-container button[type="submit"]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: rgba(255, 74, 74, 0.12);
+  border: 1px solid rgba(255, 74, 74, 0.3);
+  color: #ff7070;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  margin-bottom: 12px;
+  font-family: 'Inter', sans-serif;
+}
+
+.success-message {
+  background: rgba(25, 195, 125, 0.1);
+  border: 1px solid rgba(25, 195, 125, 0.3);
+  color: #19c37d;
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  margin-bottom: 12px;
+  font-family: 'Inter', sans-serif;
+}

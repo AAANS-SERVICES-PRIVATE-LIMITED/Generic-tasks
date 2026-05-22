@@ -1,0 +1,54 @@
+/* ============================
+   LOGIN PAGE
+   ============================ */
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--spacing-xl);
+  background-color: #2f2f2f;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  text-align: center;
+}
+
+.login-header h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+  color: var(--text-primary);
+}
+
+.login-header p {
+  color: var(--text-tertiary);
+  margin-bottom: var(--spacing-xl);
+  font-size: var(--font-size-sm);
+}
+
+.auth-toggle {
+  margin-top: var(--spacing-lg);
+}
+
+.auth-toggle button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  text-decoration: underline;
+  font-family: 'Inter', sans-serif;
+}
+
+.auth-toggle button:hover {
+  color: var(--text-primary);
+}

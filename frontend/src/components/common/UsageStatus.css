@@ -1,0 +1,251 @@
+.usage-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+  backdrop-filter: blur(4px);
+}
+
+.usage-modal-content {
+  background: #0f0f0f;
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 520px;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.usage-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.usage-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.usage-modal-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #ececec;
+  text-align: center;
+}
+
+.usage-dashboard-card {
+  background: #171717;
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.usage-header-section {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.plan-badge-wrapper {
+  margin-bottom: 10px;
+}
+
+.plan-badge-large {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 100px;
+  letter-spacing: 1px;
+}
+
+.plan-badge-large.free {
+  background: rgba(255, 255, 255, 0.08);
+  color: #c0c0c0;
+}
+
+.plan-badge-large.plus {
+  background: rgba(108, 71, 255, 0.15);
+  color: #b9a0ff;
+  border: 1px solid rgba(108, 71, 255, 0.3);
+}
+
+.plan-badge-large.pro {
+  background: rgba(255, 255, 255, 0.9);
+  color: #0f0f0f;
+  font-weight: 800;
+}
+
+.usage-subtitle {
+  font-size: 13px;
+  color: #8e8e8f;
+  margin: 0;
+}
+
+.usage-stats-section {
+  margin-bottom: 28px;
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.stats-label {
+  color: #8e8e8f;
+  font-weight: 500;
+}
+
+.stats-values {
+  color: #fff;
+}
+
+.stats-values strong {
+  font-size: 16px;
+  color: #fff;
+}
+
+.unlimited-text {
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #fff 0%, #b9a0ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.progress-bar-container {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 100px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6c47ff 0%, #a285ff 100%);
+  border-radius: 100px;
+  position: relative;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.progress-bar-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0) 100%);
+  animation: shine 2s infinite;
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #6a6a6c;
+}
+
+.progress-subtext {
+  font-size: 12px;
+  color: #8e8e8f;
+  line-height: 1.5;
+  text-align: center;
+  margin: 0;
+}
+
+.percentage-text {
+  color: #8e8e8f;
+  font-weight: 500;
+}
+
+.usage-promo-box {
+  background: rgba(108, 71, 255, 0.05);
+  border: 1px solid rgba(108, 71, 255, 0.15);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.promo-details h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #b9a0ff;
+}
+
+.promo-details p {
+  margin: 0;
+  font-size: 11px;
+  color: #8e8e8f;
+  line-height: 1.4;
+}
+
+.promo-btn {
+  background: #6c47ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.promo-btn:hover {
+  background: #5835e5;
+  box-shadow: 0 0 10px rgba(108, 71, 255, 0.2);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shine {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}

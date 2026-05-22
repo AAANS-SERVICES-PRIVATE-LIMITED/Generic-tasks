@@ -1,0 +1,223 @@
+.upgrade-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.upgrade-modal-content {
+  background: #0f0f0f;
+  border-radius: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 960px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+.upgrade-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.upgrade-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.upgrade-modal-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #ececec;
+}
+
+
+
+.upgrade-cards-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.upgrade-card {
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.free-plan {
+  background: #202123;
+  border: 1px solid transparent;
+}
+
+.plus-plan {
+  background: #2b2640;
+  border: 1px solid rgba(138, 97, 255, 0.3);
+}
+
+.pro-plan {
+  background: #202123;
+  border: 1px solid transparent;
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.plan-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #ececec;
+}
+
+.popular-badge {
+  background: rgba(138, 97, 255, 0.2);
+  color: #b9a0ff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 100px;
+  letter-spacing: 0.5px;
+}
+
+.plan-price {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.plan-price .currency {
+  font-size: 18px;
+  margin-top: 4px;
+  color: #ececec;
+}
+
+.plan-price .amount {
+  font-size: 36px;
+  font-weight: 700;
+  margin-left: 2px;
+  color: #ececec;
+}
+
+.plan-price .period {
+  font-size: 12px;
+  color: #a0a0a0;
+  margin-left: 4px;
+  margin-top: 20px;
+}
+
+.plan-subtitle {
+  font-size: 14px;
+  color: #ececec;
+  margin: 0 0 20px 0;
+}
+
+.plan-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  margin-bottom: 24px;
+  transition: all 0.2s;
+  font-family: 'Inter', sans-serif;
+}
+
+.current-plan-btn {
+  background: transparent;
+  color: #888;
+  border: 1px solid #444;
+  cursor: default;
+}
+
+.upgrade-plus-btn {
+  background: #6c47ff;
+  color: #fff;
+}
+
+.upgrade-plus-btn:hover {
+  background: #5835e5;
+}
+
+.upgrade-pro-btn {
+  background: #fff;
+  color: #000;
+}
+
+.upgrade-pro-btn:hover {
+  background: #e5e5e5;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: #ececec;
+  line-height: 1.4;
+}
+
+.plan-features svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #a0a0a0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .upgrade-cards-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.active-plan {
+  border: 2px solid #6c47ff !important;
+  box-shadow: 0 0 20px rgba(108, 71, 255, 0.4);
+}
+
